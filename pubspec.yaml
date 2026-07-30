@@ -1,0 +1,43 @@
+name: engagement_invitation
+description: "Professional Digital Engagement Invitation - Flutter Web Template"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  url_launcher: ^6.3.1     # open WhatsApp / Maps / Instagram links
+  audioplayers: ^6.1.0     # background music player
+  cupertino_icons: ^1.0.8
+  video_player: ^2.13.0
+  firebase_core: ^3.8.0    # required to connect to Firebase
+  cloud_firestore: ^5.5.0  # stores guest comments
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Playfair
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+
+  assets:
+    - assets/images/
+    - assets/music/
+    - assets/images/video/

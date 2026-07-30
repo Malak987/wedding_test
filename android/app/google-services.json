@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "72397530270",
+    "project_id": "weddingtest-2000",
+    "storage_bucket": "weddingtest-2000.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72397530270:android:52d96858c6f612f6fdc78f",
+        "android_client_info": {
+          "package_name": "com.example.wedding_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk1RL6BoTL_kPCA15-_FWHDKSmXLvpnxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
