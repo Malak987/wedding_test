@@ -27,24 +27,27 @@ class LocationSection extends StatelessWidget {
       ),
     );
 
-    // Simulated vector luxury map frame
+    // Simulated vector luxury map frame — cut-corner "plaque" shape instead
+    // of a plain rounded rectangle, matching the rest of this variant
     final simulatedMapFrame = FadeIn(
       delay: const Duration(milliseconds: 200),
       child: Container(
         height: isDesktop ? 350 : 250,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+        padding: const EdgeInsets.all(1.5),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          color: manager.primaryColor.withOpacity(0.45),
+          shape: _CutCornerBorder(cut: 26),
+          shadows: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 30,
               offset: const Offset(0, 10),
             ),
           ],
-          border: Border.all(color: manager.primaryColor.withOpacity(0.3), width: 1.5),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(18.5),
+        child: ClipPath(
+          clipper: _CutCornerClipper(24.5),
           child: Stack(
             children: [
               // Beautiful ivory map design background
@@ -148,6 +151,66 @@ class LocationSection extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Cut-corner "plaque" outline used as the map frame's outer border shape,
+/// matching the art-deco language introduced elsewhere in this variant.
+class _CutCornerBorder extends ShapeBorder {
+  final double cut;
+  const _CutCornerBorder({required this.cut});
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) => getOuterPath(rect);
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    final c = cut.clamp(0, rect.shortestSide / 2);
+    return Path()
+      ..moveTo(rect.left + c, rect.top)
+      ..lineTo(rect.right - c, rect.top)
+      ..lineTo(rect.right, rect.top + c)
+      ..lineTo(rect.right, rect.bottom - c)
+      ..lineTo(rect.right - c, rect.bottom)
+      ..lineTo(rect.left + c, rect.bottom)
+      ..lineTo(rect.left, rect.bottom - c)
+      ..lineTo(rect.left, rect.top + c)
+      ..close();
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
+
+  @override
+  ShapeBorder scale(double t) => _CutCornerBorder(cut: cut * t);
+}
+
+/// Matching clipper for the map frame's inner content (the ivory map,
+/// roads, and pin), so the content is cropped to the exact same silhouette
+/// as the [_CutCornerBorder] outline around it.
+class _CutCornerClipper extends CustomClipper<Path> {
+  final double cut;
+  const _CutCornerClipper(this.cut);
+
+  @override
+  Path getClip(Size size) {
+    final c = cut.clamp(0, size.shortestSide / 2).toDouble();
+    return Path()
+      ..moveTo(c, 0)
+      ..lineTo(size.width - c, 0)
+      ..lineTo(size.width, c)
+      ..lineTo(size.width, size.height - c)
+      ..lineTo(size.width - c, size.height)
+      ..lineTo(c, size.height)
+      ..lineTo(0, size.height - c)
+      ..lineTo(0, c)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(covariant _CutCornerClipper oldClipper) => oldClipper.cut != cut;
 }
 
 class _LuxuryMapPainter extends CustomPainter {

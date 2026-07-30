@@ -40,9 +40,9 @@ class _LandingScreenState extends State<LandingScreen> {
     super.didChangeDependencies();
     // Precache the hero background and story images so they render instantly with 0 delay!
     try {
-      precacheImage(const AssetImage('assets/images/1.jpg'), context);
+      precacheImage(const AssetImage('assets/images/story_now.png'), context);
       precacheImage(const AssetImage('assets/images/story_young.png'), context);
-      precacheImage(const AssetImage('assets/images/story_now.jpg'), context);
+      precacheImage(const AssetImage('assets/images/story_now.png'), context);
     } catch (e) {
       debugPrint('Pre-caching images failed: $e');
     }

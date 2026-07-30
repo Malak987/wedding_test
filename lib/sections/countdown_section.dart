@@ -65,7 +65,7 @@ class _CountdownSectionState extends State<CountdownSection> {
 
     return Container(
       width: double.infinity,
-      color: manager.secondaryColor.withOpacity(0.04),
+      color: manager.secondaryColor.withOpacity(0.09),
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.horizontalPadding(context),
         vertical: Responsive.value(
@@ -86,64 +86,64 @@ class _CountdownSectionState extends State<CountdownSection> {
             child: _timer == null
                 ? const CircularProgressIndicator()
                 : ValueListenableBuilder<CountdownValue>(
-                    valueListenable: _timer!.value,
-                    builder: (context, value, _) {
-                      if (value.finished) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: primary.withOpacity(0.12),
-                                blurRadius: 30,
-                                offset: const Offset(0, 10),
-                              ),
-                            ],
-                            border: Border.all(color: primary.withOpacity(0.3), width: 1),
-                          ),
-                          child: Text(
-                            Localization.get(lang, 'countdown_finished'),
-                            style: TextStyle(
-                              fontFamily: manager.headingFont,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: primary,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      }
-
-                      return Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Wrap(
-                          spacing: 16,
-                          runSpacing: 16,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            CountdownItemWidget(
-                              value: value.days,
-                              label: Localization.get(lang, 'countdown_days'),
-                            ),
-                            CountdownItemWidget(
-                              value: value.hours,
-                              label: Localization.get(lang, 'countdown_hours'),
-                            ),
-                            CountdownItemWidget(
-                              value: value.minutes,
-                              label: Localization.get(lang, 'countdown_minutes'),
-                            ),
-                            CountdownItemWidget(
-                              value: value.seconds,
-                              label: Localization.get(lang, 'countdown_seconds'),
-                            ),
-                          ],
+              valueListenable: _timer!.value,
+              builder: (context, value, _) {
+                if (value.finished) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                    decoration: BoxDecoration(
+                      color: manager.accentColor,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primary.withOpacity(0.12),
+                          blurRadius: 30,
+                          offset: const Offset(0, 10),
                         ),
-                      );
-                    },
+                      ],
+                      border: Border.all(color: primary.withOpacity(0.3), width: 1),
+                    ),
+                    child: Text(
+                      Localization.get(lang, 'countdown_finished'),
+                      style: TextStyle(
+                        fontFamily: manager.headingFont,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: primary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+
+                return Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      CountdownItemWidget(
+                        value: value.days,
+                        label: Localization.get(lang, 'countdown_days'),
+                      ),
+                      CountdownItemWidget(
+                        value: value.hours,
+                        label: Localization.get(lang, 'countdown_hours'),
+                      ),
+                      CountdownItemWidget(
+                        value: value.minutes,
+                        label: Localization.get(lang, 'countdown_minutes'),
+                      ),
+                      CountdownItemWidget(
+                        value: value.seconds,
+                        label: Localization.get(lang, 'countdown_seconds'),
+                      ),
+                    ],
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),

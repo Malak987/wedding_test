@@ -4,7 +4,6 @@ import '../core/localization.dart';
 import '../core/responsive.dart';
 import '../core/constants.dart';
 import '../widgets/section_title.dart';
-import '../widgets/gallery_image.dart';
 import '../animations/scale_in.dart';
 
 class GallerySection extends StatefulWidget {
@@ -44,9 +43,9 @@ class _GallerySectionState extends State<GallerySection> {
   Widget build(BuildContext context) {
     final manager = AppConfigManager.instance;
     final lang = manager.selectedLanguage;
-    final columns = _galleryImages.length < 3
-        ? _galleryImages.length
-        : Responsive.value<int>(context, mobile: 2, tablet: 3, desktop: 3);
+    final isMobile = Responsive.isMobile(context);
+    final cardWidth = isMobile ? 170.0 : 220.0;
+    final railHeight = isMobile ? 300.0 : 380.0;
 
     return Container(
       color: manager.accentColor,
@@ -58,37 +57,116 @@ class _GallerySectionState extends State<GallerySection> {
           desktop: AppConstants.sectionSpacing,
         ),
       ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            children: [
-              SectionTitle(
-                title: Localization.get(lang, 'nav_gallery'),
-                subtitle: Localization.get(lang, 'gallery_subtitle'),
+      child: Column(
+        children: [
+          SectionTitle(
+            title: Localization.get(lang, 'nav_gallery'),
+            subtitle: Localization.get(lang, 'gallery_subtitle'),
+          ),
+          const SizedBox(height: 56),
+          // A tilted "scrapbook" filmstrip — scroll horizontally through
+          // polaroid-framed photos, replacing the original plain grid.
+          SizedBox(
+            height: railHeight,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.horizontalPadding(context),
+                vertical: 24,
               ),
-              const SizedBox(height: 48),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _galleryImages.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.75, // Tall, elegant fashion-style grid
-                ),
-                itemBuilder: (context, index) {
-                  return ScaleIn(
-                    delay: Duration(milliseconds: 100 * (index % 4)),
-                    child: GalleryImage(
-                      imagePath: _galleryImages[index],
-                      onTap: () => _openLightbox(index),
+              itemCount: _galleryImages.length,
+              itemBuilder: (context, index) {
+                // Alternate the tilt direction and vertical drift so the
+                // strip reads as loosely scattered photos, not a rigid grid.
+                final tilt = (index.isEven ? -1 : 1) * (0.035 + (index % 3) * 0.01);
+                final liftUp = (index % 3 == 1) ? 14.0 : 0.0;
+
+                return Padding(
+                  padding: EdgeInsets.only(right: 20, bottom: liftUp),
+                  child: ScaleIn(
+                    delay: Duration(milliseconds: 90 * index),
+                    child: Transform.rotate(
+                      angle: tilt,
+                      child: _PolaroidPhoto(
+                        imagePath: _galleryImages[index],
+                        width: cardWidth,
+                        onTap: () => _openLightbox(index),
+                      ),
                     ),
-                  );
-                },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A single photo framed like a vintage polaroid — thick cream border,
+/// thicker bottom margin, and a thin gold hairline — used in the
+/// horizontally scrolling scrapbook filmstrip.
+class _PolaroidPhoto extends StatefulWidget {
+  final String imagePath;
+  final double width;
+  final VoidCallback onTap;
+
+  const _PolaroidPhoto({
+    required this.imagePath,
+    required this.width,
+    required this.onTap,
+  });
+
+  @override
+  State<_PolaroidPhoto> createState() => _PolaroidPhotoState();
+}
+
+class _PolaroidPhotoState extends State<_PolaroidPhoto> {
+  bool _hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final manager = AppConfigManager.instance;
+    final primary = manager.primaryColor;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          scale: _hovering ? 1.05 : 1.0,
+          duration: AppConstants.animFast,
+          curve: Curves.easeOut,
+          child: Container(
+            width: widget.width,
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 26),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFBF9F3),
+              border: Border.all(color: primary.withOpacity(0.5), width: 1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: AspectRatio(
+              aspectRatio: 0.82,
+              child: Image.asset(
+                widget.imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: Colors.grey.shade200,
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.image_outlined, color: Colors.grey),
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

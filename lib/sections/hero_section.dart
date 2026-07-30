@@ -24,8 +24,8 @@ class HeroSection extends StatelessWidget {
     // everything, and sharp inside the arched frame as the featured image.
     const String bgAsset = 'assets/images/story_now.png';
 
-    final frameWidth = isMobile ? 190.0 : 260.0;
-    final frameHeight = frameWidth * 1.32; // close to the photo's own 3:4 ratio
+    final frameWidth = isMobile ? 200.0 : 270.0;
+    final frameHeight = frameWidth; // circular medallion — 1:1
 
     return SizedBox(
       width: double.infinity,
@@ -61,15 +61,16 @@ class HeroSection extends StatelessWidget {
               ),
             ),
 
-            // Luxury Dark Vignette Overlay — keeps white text crisp and legible
+            // Luxury Emerald-Navy Vignette Overlay — keeps white text crisp
+            // while tinting the whole hero with the new deep jewel-tone palette
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.black.withOpacity(0.72),
-                      Colors.black.withOpacity(0.45),
-                      Colors.black.withOpacity(0.8),
+                      const Color(0xFF061815).withOpacity(0.85),
+                      const Color(0xFF0B2E23).withOpacity(0.55),
+                      const Color(0xFF04120F).withOpacity(0.88),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -83,26 +84,32 @@ class HeroSection extends StatelessWidget {
               child: BackgroundParticles(particleCount: 30),
             ),
 
-            // Premium Double Gold Border Frame (Luxury Engagement Aesthetic)
+            // Art-Deco Corner Brackets (replaces the full rectangle border
+            // from the original design — a distinct visual signature for
+            // this variant)
             Positioned.fill(
               child: Padding(
-                padding: EdgeInsets.all(isMobile ? 12 : 24),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: primary.withOpacity(0.4),
-                      width: 1.5,
+                padding: EdgeInsets.all(isMobile ? 14 : 26),
+                child: Stack(
+                  children: [
+                    Align(alignment: Alignment.topLeft, child: _CornerBracket(color: primary)),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Transform.flip(flipX: true, child: _CornerBracket(color: primary)),
                     ),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: primary.withOpacity(0.2),
-                        width: 1,
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Transform.flip(flipY: true, child: _CornerBracket(color: primary)),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Transform.flip(
+                        flipX: true,
+                        flipY: true,
+                        child: _CornerBracket(color: primary),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -219,10 +226,9 @@ class HeroSection extends StatelessWidget {
   }
 }
 
-/// The couple's photo, shown in full (no ugly cropping — the frame's aspect
-/// ratio matches the photo's own), inside an elegant arched frame with a
-/// double gold border and soft glow — the classic invitation "portrait
-/// medallion" look, built entirely from the couple's own picture.
+/// The couple's photo shown inside a circular "medallion" frame with a
+/// double gold ring and soft glow — this variant's signature shape,
+/// replacing the original's arched cathedral frame for a distinct look.
 class _ArchedPortrait extends StatelessWidget {
   final String assetPath;
   final double width;
@@ -239,41 +245,40 @@ class _ArchedPortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(6),
+      width: width,
+      height: height,
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: frameColor.withOpacity(0.9), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.35),
+            color: frameColor.withOpacity(0.35),
             blurRadius: 30,
-            offset: const Offset(0, 12),
+            spreadRadius: 2,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: ClipPath(
-        clipper: _ArchClipper(),
-        child: Container(
-          width: width,
-          height: height,
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(color: frameColor.withOpacity(0.85)),
-          child: ClipPath(
-            clipper: _ArchClipper(),
-            child: Container(
-              padding: const EdgeInsets.all(3),
-              color: Colors.white.withOpacity(0.9),
-              child: ClipPath(
-                clipper: _ArchClipper(),
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: frameColor.withOpacity(0.2),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.favorite, color: frameColor, size: 40),
-                  ),
-                ),
-              ),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: frameColor.withOpacity(0.4), width: 1),
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            assetPath,
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: frameColor.withOpacity(0.2),
+              alignment: Alignment.center,
+              child: Icon(Icons.favorite, color: frameColor, size: 40),
             ),
           ),
         ),
@@ -282,27 +287,57 @@ class _ArchedPortrait extends StatelessWidget {
   }
 }
 
-/// A classic "cathedral arch" clip path — rectangular body with a rounded
-/// semicircular top, the timeless shape used for wedding portrait frames.
-class _ArchClipper extends CustomClipper<Path> {
+/// A slim L-shaped corner ornament (art-deco style) drawn at each of the
+/// hero's four corners — this variant's replacement for the original's
+/// full double-rectangle border.
+class _CornerBracket extends StatelessWidget {
+  final Color color;
+  const _CornerBracket({required this.color});
+
   @override
-  Path getClip(Size size) {
-    final archRadius = size.width / 2;
-    final path = Path()
-      ..moveTo(0, archRadius)
-      ..arcToPoint(
-        Offset(size.width, archRadius),
-        radius: Radius.circular(archRadius),
-        clockwise: true,
-      )
-      ..lineTo(size.width, size.height)
-      ..lineTo(0, size.height)
-      ..close();
-    return path;
+  Widget build(BuildContext context) {
+    const double size = 46;
+    return CustomPaint(
+      size: const Size(size, size),
+      painter: _CornerBracketPainter(color: color),
+    );
+  }
+}
+
+class _CornerBracketPainter extends CustomPainter {
+  final Color color;
+  _CornerBracketPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final outerPaint = Paint()
+      ..color = color.withOpacity(0.75)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+    final innerPaint = Paint()
+      ..color = color.withOpacity(0.4)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPath(
+      Path()
+        ..moveTo(0, size.height * 0.55)
+        ..lineTo(0, 0)
+        ..lineTo(size.width * 0.55, 0),
+      outerPaint,
+    );
+    canvas.drawPath(
+      Path()
+        ..moveTo(8, size.height * 0.4)
+        ..lineTo(8, 8)
+        ..lineTo(size.width * 0.4, 8),
+      innerPaint,
+    );
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldRepaint(covariant _CornerBracketPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 /// A thin decorative line used either side of the small heart ornament

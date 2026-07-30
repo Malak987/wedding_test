@@ -31,7 +31,7 @@ class FloatingNavbar extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: manager.accentColor.withOpacity(0.92),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: primary.withOpacity(0.35), width: 1.2),
         boxShadow: [
@@ -79,7 +79,7 @@ class FloatingNavbar extends StatelessWidget {
               fontFamily: manager.bodyFont,
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: manager.secondaryColor,
             ),
           ),
         ),

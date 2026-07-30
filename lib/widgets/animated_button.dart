@@ -29,6 +29,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
   Widget build(BuildContext context) {
     final manager = AppConfigManager.instance;
     final primary = manager.primaryColor;
+    final secondary = manager.secondaryColor;
     final scale = _pressed ? 0.95 : (_hovering ? 1.05 : 1.0);
 
     return MouseRegion(
@@ -48,11 +49,14 @@ class _AnimatedButtonState extends State<AnimatedButton> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
             decoration: BoxDecoration(
-              color: widget.backgroundColor ?? primary,
+              // Emerald fill with a thin gold border — emerald is the
+              // dominant color on this variant, gold stays a trim accent.
+              color: widget.backgroundColor ?? secondary,
               borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: primary.withOpacity(0.85), width: 1.2),
               boxShadow: [
                 BoxShadow(
-                  color: (widget.backgroundColor ?? primary).withOpacity(_hovering ? 0.45 : 0.25),
+                  color: (widget.backgroundColor ?? secondary).withOpacity(_hovering ? 0.45 : 0.25),
                   blurRadius: _hovering ? 20 : 10,
                   offset: const Offset(0, 6),
                 ),
@@ -62,7 +66,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.icon != null) ...[
-                  Icon(widget.icon, size: 18, color: widget.textColor ?? Colors.white),
+                  Icon(widget.icon, size: 18, color: widget.textColor ?? primary),
                   const SizedBox(width: 8),
                 ],
                 Text(

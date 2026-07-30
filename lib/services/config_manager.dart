@@ -28,10 +28,10 @@ class AppConfigManager extends ChangeNotifier {
   String _whatsappNumber = '+201142803143';
   String _facebookUrl = 'https://www.facebook.com/profile.php?id=61591828140123';
 
-  // Aesthetic Colors
-  String _primaryColor = '0xFFC9A66B'; // Gold
-  String _secondaryColor = '0xFF6B4F3B'; // Deep warm brown
-  String _accentColor = '0xFFFDF7F2'; // Soft beige background tint
+  // Aesthetic Colors — Variant 2: deep emerald/navy luxury with gold accents
+  String _primaryColor = '0xFFCBA135'; // Antique gold — accent only
+  String _secondaryColor = '0xFF0B2E23'; // Deep emerald — the dominant color
+  String _accentColor = '0xFFE7F0EA'; // Pale emerald/sage background tint
 
   // Font Choices
   String _headingFont = 'Playfair';

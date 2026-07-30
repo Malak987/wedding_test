@@ -18,7 +18,7 @@ class ThankYouSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: Colors.black,
+      color: const Color(0xFF03120D), // deep emerald-black, not neutral black
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.horizontalPadding(context),
         vertical: Responsive.value(
