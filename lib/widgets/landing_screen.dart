@@ -40,9 +40,9 @@ class _LandingScreenState extends State<LandingScreen> {
     super.didChangeDependencies();
     // Precache the hero background and story images so they render instantly with 0 delay!
     try {
-      precacheImage(const AssetImage('assets/images/story_now.png'), context);
+      precacheImage(const AssetImage('assets/images/1.jpg'), context);
       precacheImage(const AssetImage('assets/images/story_young.png'), context);
-      precacheImage(const AssetImage('assets/images/story_now.png'), context);
+      precacheImage(const AssetImage('assets/images/story_now.jpg'), context);
     } catch (e) {
       debugPrint('Pre-caching images failed: $e');
     }
@@ -84,17 +84,31 @@ class _LandingScreenState extends State<LandingScreen> {
       children: [
         // 1. Fullscreen Intro Video Player Layer
         // Paused on frame 1 until _videoPlaying is true.
-        IntroVideoPlayer(
-          videoPath: 'assets/images/video/s&m.mp4',
-          playTriggered: _videoPlaying,
-          onInitialized: () {
-            if (mounted) {
-              setState(() {
-                _videoLoaded = true;
-              });
-            }
-          },
-          onCompleted: _onVideoFinished,
+        //
+        // IMPORTANT: kept invisible (opacity 0) until _isFullyPreloaded is
+        // true. The widget itself stays mounted the whole time so it keeps
+        // initializing in the background — only its paint output is hidden.
+        // Previously the paused seal frame appeared as soon as the video
+        // alone finished initializing (_videoLoaded), often before the audio
+        // was ready. That made the seal look tappable while the hotspot was
+        // still disabled (wait cursor, no hit-testing), which is exactly what
+        // read as "the site is stuck / slow". Now the seal frame, the click
+        // cursor, and the "Double Tap...!" instruction all appear together,
+        // in the same frame, only once a tap would actually do something.
+        Opacity(
+          opacity: _isFullyPreloaded ? 1.0 : 0.0,
+          child: IntroVideoPlayer(
+            videoPath: 'assets/images/video/s&m.mp4',
+            playTriggered: _videoPlaying,
+            onInitialized: () {
+              if (mounted) {
+                setState(() {
+                  _videoLoaded = true;
+                });
+              }
+            },
+            onCompleted: _onVideoFinished,
+          ),
         ),
 
         // 2. Fully invisible Hot-Spot Overlay on top of the physical wax seal
@@ -107,8 +121,12 @@ class _LandingScreenState extends State<LandingScreen> {
               child: MouseRegion(
                 cursor: _isFullyPreloaded ? SystemMouseCursors.click : SystemMouseCursors.wait,
                 child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onDoubleTap: _handleOpenInvitation,
+                  // Only hit-test (and therefore only allow the double tap) once
+                  // everything is actually preloaded. Before that, taps pass
+                  // straight through instead of silently doing nothing — which
+                  // is what made the site feel "stuck" during the first seconds.
+                  behavior: _isFullyPreloaded ? HitTestBehavior.opaque : HitTestBehavior.translucent,
+                  onDoubleTap: _isFullyPreloaded ? _handleOpenInvitation : null,
                   child: const SizedBox(width: 100, height: 100),
                 ),
               ),
@@ -116,13 +134,16 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
 
         // 3. Elegant Bottom Instruction Overlay (Cairo font, champagne gold, low opacity)
+        // Shows a "preparing" spinner until the seal video + audio are truly
+        // ready, then switches to "Double Tap...!" — so the instruction on
+        // screen always matches what will actually happen if the visitor taps.
         if (!_videoPlaying)
-          const Positioned(
+          Positioned(
             bottom: 60,
             left: 0,
             right: 0,
             child: IgnorePointer(
-              child: InstructionWidget(),
+              child: InstructionWidget(isReady: _isFullyPreloaded),
             ),
           ),
       ],
