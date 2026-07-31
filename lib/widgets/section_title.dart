@@ -6,7 +6,19 @@ class SectionTitle extends StatelessWidget {
   final String title;
   final String? subtitle;
 
-  const SectionTitle({super.key, required this.title, this.subtitle});
+  /// Optional overrides so sections with a dark backdrop (story,
+  /// comments) can render the title in a light color while every
+  /// other section keeps the default emerald-on-cream look.
+  final Color? titleColor;
+  final Color? subtitleColor;
+
+  const SectionTitle({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.titleColor,
+    this.subtitleColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +33,7 @@ class SectionTitle extends StatelessWidget {
             fontFamily: manager.headingFont,
             fontSize: 32,
             fontWeight: FontWeight.bold,
-            color: secondary,
+            color: titleColor ?? secondary,
           ),
           textAlign: TextAlign.center,
         ),
@@ -37,7 +49,7 @@ class SectionTitle extends StatelessWidget {
                 fontFamily: manager.bodyFont,
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
-                color: Colors.black54,
+                color: subtitleColor ?? Colors.black54,
                 height: 1.6,
               ),
               textAlign: TextAlign.center,

@@ -6,6 +6,15 @@ import '../core/constants.dart';
 import '../widgets/section_title.dart';
 import '../animations/fade_in.dart';
 
+/// ============================================================
+/// OUR STORY
+/// ============================================================
+/// Same light-emerald backdrop (`accentColor`) as the Gallery and
+/// Memories sections for a consistent rhythm through the page.
+/// The deep emerald ("الأخضر القرمزي") stays clearly visible in the
+/// iconography: the quote emblem, the drag-handle icon, the hairline,
+/// and the couple's sign-off — while antique gold frames the photo.
+/// ============================================================
 class StorySection extends StatelessWidget {
   const StorySection({super.key});
 
@@ -15,45 +24,78 @@ class StorySection extends StatelessWidget {
     final lang = manager.selectedLanguage;
     final isDesktop = Responsive.isDesktop(context);
 
+    // Palette — derived from the dashboard colors, so everything here
+    // still follows whatever is configured in the Admin Dashboard.
+    final emerald = manager.secondaryColor; // deep emerald — visible accents
+    final gold = manager.primaryColor; // antique gold — photo frame + handle
+
     // The couple's own photos: as kids, and as they are today.
     const String youngImg = 'assets/images/story_young.png';
     const String nowImg = 'assets/images/story_now.png';
 
     final textColumn = FadeIn(
-      child: Column(
-        crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.spa_outlined,
-            color: manager.primaryColor,
-            size: 32,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            manager.storyText,
-            style: TextStyle(
-              fontFamily: manager.bodyFont,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Colors.black87,
-              height: 1.8,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 34),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: emerald.withOpacity(0.16), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: emerald.withOpacity(0.10),
+              blurRadius: 26,
+              offset: const Offset(0, 12),
             ),
-            textAlign: isDesktop ? TextAlign.start : TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          // Subtle romantic sign-off
-          Text(
-            "— ${manager.groomName} & ${manager.brideName}",
-            style: TextStyle(
-              fontFamily: manager.headingFont,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: manager.primaryColor,
-              fontStyle: FontStyle.italic,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Deep-emerald quote emblem — the green "stamp" of the section
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: emerald.withOpacity(0.10),
+                border: Border.all(color: emerald.withOpacity(0.4), width: 1.2),
+              ),
+              child: Icon(
+                Icons.format_quote_rounded,
+                color: emerald,
+                size: 26,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 18),
+            Text(
+              manager.storyText,
+              style: TextStyle(
+                fontFamily: manager.bodyFont,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: Colors.black87,
+                height: 1.9,
+              ),
+              textAlign: isDesktop ? TextAlign.start : TextAlign.center,
+            ),
+            const SizedBox(height: 22),
+            // Thin emerald hairline above the sign-off
+            Container(width: 44, height: 1.4, color: emerald.withOpacity(0.55)),
+            const SizedBox(height: 14),
+            Text(
+              "— ${manager.groomName} & ${manager.brideName}",
+              style: TextStyle(
+                fontFamily: manager.headingFont,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: emerald, // deep emerald sign-off
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: isDesktop ? TextAlign.start : TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
 
@@ -63,13 +105,14 @@ class StorySection extends StatelessWidget {
           _BeforeAfterSlider(
             youngImage: youngImg,
             nowImage: nowImg,
-            accentColor: manager.primaryColor,
+            accentColor: gold,
+            iconColor: emerald,
           ),
           const SizedBox(height: 14),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.swipe_outlined, size: 16, color: manager.primaryColor.withOpacity(0.8)),
+              Icon(Icons.swipe_outlined, size: 16, color: emerald),
               const SizedBox(width: 6),
               Text(
                 Localization.get(lang, 'story_hint'),
@@ -87,6 +130,7 @@ class StorySection extends StatelessWidget {
     );
 
     return Container(
+      // Same light-green background as Gallery + Memories sections
       color: manager.accentColor,
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.horizontalPadding(context),
@@ -133,16 +177,19 @@ class StorySection extends StatelessWidget {
 
 /// An interactive "then & now" reveal: drag (or tap) the handle in the
 /// middle — dragging right reveals more of the couple's childhood photo,
-/// dragging left reveals more of them today.
+/// dragging left reveals more of them today. Framed with a gold hairline
+/// and a gold drag handle carrying the deep-emerald arrows.
 class _BeforeAfterSlider extends StatefulWidget {
   final String youngImage;
   final String nowImage;
-  final Color accentColor;
+  final Color accentColor; // gold — frame + handle gradient + badge outlines
+  final Color iconColor; // deep emerald — drag-handle arrows + shadow tint
 
   const _BeforeAfterSlider({
     required this.youngImage,
     required this.nowImage,
     required this.accentColor,
+    required this.iconColor,
   });
 
   @override
@@ -168,18 +215,28 @@ class _BeforeAfterSliderState extends State<_BeforeAfterSlider> {
           final height = constraints.maxHeight;
 
           return Container(
+            padding: const EdgeInsets.all(2.5),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(26),
+              // Gold hairline frame, fading diagonally for a premium feel
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  widget.accentColor.withOpacity(0.95),
+                  widget.accentColor.withOpacity(0.25),
+                ],
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
+                  color: widget.iconColor.withOpacity(0.22),
+                  blurRadius: 28,
+                  offset: const Offset(0, 14),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onHorizontalDragUpdate: (details) => _updateRatio(details.localPosition.dx, width),
@@ -212,21 +269,33 @@ class _BeforeAfterSliderState extends State<_BeforeAfterSlider> {
                       child: Container(width: 2, color: Colors.white.withOpacity(0.95)),
                     ),
 
-                    // Drag handle
+                    // Drag handle — gold gradient circle with emerald arrows
                     Positioned(
-                      left: (_ratio * width) - 22,
-                      top: (height / 2) - 22,
+                      left: (_ratio * width) - 23,
+                      top: (height / 2) - 23,
                       child: Container(
-                        width: 44,
-                        height: 44,
+                        width: 46,
+                        height: 46,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color.lerp(widget.accentColor, Colors.white, 0.35)!,
+                              widget.accentColor,
+                            ],
+                          ),
+                          border: Border.all(color: Colors.white.withOpacity(0.8), width: 1.5),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 10, offset: const Offset(0, 3)),
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
                           ],
                         ),
-                        child: Icon(Icons.compare_arrows_rounded, color: widget.accentColor, size: 22),
+                        child: Icon(Icons.compare_arrows_rounded, color: widget.iconColor, size: 22),
                       ),
                     ),
 

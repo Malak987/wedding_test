@@ -5,13 +5,13 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  
+
   <!-- SEO Optimization -->
   <title>فلان &amp; فلانه | دعوة خطوبة</title>
   <meta name="description" content="يسعدنا دعوتكم لمشاركتنا فرحتنا بحفل خطوبة فلان  فلانه. نتشرف بحضوركم لمشاركتنا أجمل لحظات العمر.">
   <meta name="keywords" content="دعوة خطوبة, فلان & فلانه, دعوة إلكترونية, engagement invitation">
   <meta name="author" content="فلان &amp; فلانه ">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="فلان &amp; فلانه | دعوة خطوبة">
@@ -41,37 +41,114 @@
 
   <link rel="manifest" href="manifest.json">
 
+  <!-- Circle loading screen: shown until Flutter renders its first frame -->
+  <style>
+    #app-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 35%, #14402F 0%, #0B2E23 55%, #071D16 100%);
+      transition: opacity .6s ease;
+    }
+    #app-loader.done { opacity: 0; pointer-events: none; }
+    #app-loader .spinner { position: relative; width: 104px; height: 104px; }
+    #app-loader svg.ring {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      animation: al-spin 1.15s linear infinite;
+    }
+    #app-loader svg.heart {
+      position: absolute; inset: 0; margin: auto; width: 34px; height: 34px;
+      animation: al-pulse 1.15s ease-in-out infinite alternate;
+    }
+    @keyframes al-spin { to { transform: rotate(360deg); } }
+    @keyframes al-pulse { from { transform: scale(.9); } to { transform: scale(1.14); } }
+    #app-loader .txt {
+      margin-top: 26px;
+      font-family: 'Cairo', sans-serif;
+      color: rgba(255, 255, 255, .78);
+      font-size: 14px;
+      letter-spacing: 2px;
+      font-weight: 300;
+    }
+    #app-loader .dots span { animation: al-blink 1.4s infinite; display: inline-block; }
+    #app-loader .dots span:nth-child(2) { animation-delay: .2s; }
+    #app-loader .dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes al-blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+  </style>
+
   <!-- Structured Data (Schema.org JSON-LD) -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": "خطوبة فلان وفلانه",
-    "startDate": "2026-08-23T19:00:00+02:00",
-    "endDate": "2026-08-24T00:00:00+02:00",
-    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "location": {
-      "@type": "Place",
-      "name": "قاعة الأفراح الملكية",
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 26.569541148546833,
-        "longitude": 31.70995890878019
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "خطوبة فلان وفلانه",
+      "startDate": "2026-08-23T19:00:00+02:00",
+      "endDate": "2026-08-24T00:00:00+02:00",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "location": {
+        "@type": "Place",
+        "name": "قاعة الأفراح الملكية",
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 26.569541148546833,
+          "longitude": 31.70995890878019
+        }
+      },
+      "image": [
+        "assets/images/1.jpg"
+      ],
+      "description": "الدعوة الرقمية لحفل خطوبة فلان & فلانه، يوم 23 أغسطس 2026.",
+      "performer": {
+        "@type": "Person",
+        "name": "فلان & فلانه"
       }
-    },
-    "image": [
-      "assets/images/1.jpg"
-    ],
-    "description": "الدعوة الرقمية لحفل خطوبة فلان & فلانه، يوم 23 أغسطس 2026.",
-    "performer": {
-      "@type": "Person",
-      "name": "فلان & فلانه"
     }
-  }
   </script>
 </head>
-<body style="background-color: #FFF9F3; margin: 0; padding: 0;">
-  <script src="flutter_bootstrap.js" async></script>
-</body>
+<body style="background-color: #0B2E23; margin: 0; padding: 0;">
+<!-- Circle loader — removed automatically once Flutter's first frame renders -->
+<div id="app-loader">
+  <div class="spinner">
+    <svg class="ring" viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="al-gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#E3C878"/>
+          <stop offset="100%" stop-color="#CBA135"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(203, 161, 53, .18)" stroke-width="5"/>
+      <circle cx="50" cy="50" r="42" fill="none" stroke="url(#al-gold)" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="198 66" transform="rotate(-90 50 50)"/>
+    </svg>
+    <svg class="heart" viewBox="0 0 24 24">
+      <path fill="#CBA135" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+  </div>
+  <div class="txt">جاري تجهيز الدعوة<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+</div>
+
+<script>
+  (function () {
+    var loader = document.getElementById('app-loader');
+    var hidden = false;
+    function hideLoader() {
+      if (hidden || !loader) return;
+      hidden = true;
+      loader.classList.add('done');
+      setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 700);
+    }
+    // Fired by the Flutter web engine once the very first frame is painted
+    window.addEventListener('flutter-first-frame', hideLoader);
+    // Safety net: never trap the visitor on the loader
+    setTimeout(hideLoader, 15000);
+  })();
+</script>
+
+<script src="flutter_bootstrap.js" async></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2394208dc60cf28',t:'MTc4NTQ2NTgzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
