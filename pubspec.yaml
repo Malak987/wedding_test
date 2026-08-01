@@ -14,7 +14,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   video_player: ^2.13.0
   firebase_core: ^3.8.0    # required to connect to Firebase
-  cloud_firestore: ^5.5.0  # stores guest comments
+  cloud_firestore: ^5.5.0  # stores guest comments + RSVP responses
+  firebase_messaging: ^15.1.5 # optional web push reminders after RSVP
 
 
 dev_dependencies:

@@ -39,4 +39,22 @@ class AppLinks {
   /// their comments apart in the Firebase Console. Just change this
   /// one line per variant — nothing else needs to change.
   static const String siteId = 'main';
+
+  /// ----------------------------------------------------------
+  /// RSVP / Calendar / Notifications identifiers.
+  /// ----------------------------------------------------------
+  /// RSVP documents are saved in Firestore collection `guestResponses`.
+  /// The document ID is generated from `eventId + guestId`, so every guest
+  /// updates the same document if they submit again.
+  static const String eventId = 'event_001';
+
+  /// Public invitation URL used inside Google Calendar and ICS files.
+  static const String weddingWebsiteUrl = 'https://weddingtest-2000.web.app/';
+
+  /// Firebase Cloud Messaging Web Push certificate key.
+  /// Firebase Console → Project settings → Cloud Messaging → Web Push
+  /// certificates → Generate key pair, then paste the public key here.
+  /// Leaving it empty keeps RSVP working; notifications will show a helpful
+  /// setup message until the key is configured.
+  static const String fcmWebVapidKey = '';
 }

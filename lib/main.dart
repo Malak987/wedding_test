@@ -11,7 +11,7 @@ import 'sections/countdown_section.dart';
 import 'sections/gallery_section.dart';
 import 'sections/location_section.dart';
 import 'sections/schedule_section.dart';
-import 'sections/comments_section.dart';
+import 'sections/rsvp_section.dart';
 import 'sections/thank_you_section.dart';
 import 'sections/footer_section.dart';
 import 'sections/music_player.dart';
@@ -156,7 +156,7 @@ class _InvitationHomePageState extends State<InvitationHomePage> {
                           KeyedSubtree(key: _venueKey, child: const LocationSection()),
                         if (manager.showSchedule)
                           KeyedSubtree(key: _scheduleKey, child: const ScheduleSection()),
-                        const CommentsSection(),
+                        const RsvpSection(),
                         const ThankYouSection(),
                         const FooterSection(),
                       ],
