@@ -28,7 +28,7 @@ class AppLinks {
   /// 6. (Optional) Open the linked "Responses" tab > the folder icon
   ///    to jump straight to the Google Drive folder collecting everything.
   static const String guestPhotosFormUrl =
-      'https://forms.google.com/PASTE_YOUR_FORM_LINK_HERE';
+      'https://forms.gle/wxbq2DYvTMCjZAZK7';
 
   /// ----------------------------------------------------------
   /// Site identifier for the comments feature.
